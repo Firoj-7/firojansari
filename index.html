@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firoj Ansari</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            display: flex;
+            gap: 80px;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 60px;
+            align-self: flex-start;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #2b333b;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .social-links a:hover {
+            background: #0d9488;
+        }
+
+        .twitter-follow {
+            background: #2b333b;
+        }
+
+        .twitter-follow:hover {
+            background: #14b8a6;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #2b333b;
+        }
+
+        .archive-link {
+            color: #000;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+
+        .archive-link:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        .dashboard-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #000;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+
+        .dashboard-link:hover {
+            color: #000;
+        }
+
+        .rss-link {
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .rss-link img {
+            width: 14px;
+            height: 14px;
+        }
+
+        .sidebar-archive {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 60px;
+            align-self: flex-start;
+        }
+
+        .sidebar-archive h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .sidebar-archive h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .date-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .date-item {
+            color: #0f766e;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+
+        .date-item:hover {
+            text-decoration: underline;
+        }
+
+        .date-item span {
+            color: #999;
+        }
+
+        .archive-content {
+            flex: 1;
+            max-width: 680px;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            max-width: 680px;
+        }
+
+        .dashboard-note {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .logout-admin-btn {
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #333;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .dashboard-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .dashboard-form input,
+        .dashboard-form textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .dashboard-form textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .dashboard-actions button {
+            border: none;
+            border-radius: 6px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-draft {
+            background: #2b333b;
+            color: #fff;
+        }
+
+        .btn-publish {
+            background: #0f766e;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .dashboard-message {
+            min-height: 22px;
+            font-size: 14px;
+            color: #0f766e;
+        }
+
+        .export-snippet {
+            width: 100%;
+            min-height: 110px;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border: 1px dashed #cbd5e1;
+            background: #f8fafc;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #334155;
+            white-space: pre-wrap;
+        }
+
+        .dashboard-list {
+            margin-top: 20px;
+        }
+
+        .dashboard-list h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-list ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dashboard-list li {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-post-meta {
+            font-size: 12px;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        .dashboard-post-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-post-actions button {
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .archive-header {
+            margin-bottom: 30px;
+        }
+
+        .archive-list {
+            margin-top: 30px;
+        }
+
+        .archive-item {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .archive-item:last-child {
+            border-bottom: none;
+        }
+
+        .archive-item h2 {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .archive-item h2 a {
+            color: #0f766e;
+            text-decoration: none;
+        }
+
+        .archive-item h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .archive-item .post-meta {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 680px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 400;
+            margin-bottom: 60px;
+            letter-spacing: -0.5px;
+        }
+
+        article {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #eee;
+        }
+
+        article:last-child {
+            border-bottom: none;
+        }
+
+        article h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        article h2 a {
+            color: #0f766e;
+            text-decoration: none;
+        }
+
+        article h2 a:hover {
+            text-decoration: underline;
+        }
+
+        article p {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .post-meta {
+            font-size: 13px;
+            color: #999;
+            margin-top: 15px;
+        }
+
+        .post-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .post-image-caption {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .pagination a:hover {
+            background: #f5f5f5;
+        }
+
+        .pagination .current {
+            background: #0f766e;
+            color: white;
+            border-color: #0f766e;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .social-buttons button {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .social-buttons button:hover {
+            background: #f5f5f5;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .sidebar, .sidebar-archive {
+                width: 100%;
+                position: static;
+            }
+
+            .social-links {
+                flex-direction: row;
+            }
+
+            .date-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 15px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            article h2 {
+                font-size: 20px;
+            }
+
+            article p {
+                font-size: 15px;
+            }
+
+            .social-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Firoj Ansari</h2>
+            
+            <div class="social-links">
+                <!-- <a href="mailto:your@email.com">Subscribe by Email</a> -->
+                <a href="https://x.com/Firoj_7S" class="twitter-follow">Follow @X</a>
+            </div>
+
+            <div class="search-box">
+                <input type="text" placeholder="Search this site...">
+            </div>
+
+            <a href="#archive" class="archive-link" onclick="showArchive(); return false;">Visit all Blogs</a>
+            <a href="#dashboard" id="dashboardLink" class="dashboard-link" style="display: none;" onclick="showDashboard(); return false;">Local Draft Dashboard</a>
+            
+        </aside>
+
+        <aside class="sidebar-archive" id="archiveSidebar" style="display: none;">
+            <h2><a href="#blog" onclick="showBlog(); return false;" style="color: #0f766e; text-decoration: none;">« Back to blog</a></h2>
+            
+            <h3 style="font-size: 14px; font-weight: 600; margin: 20px 0 10px 0; color: #999; text-transform: uppercase;">Browse By Date</h3>
+            
+            <div class="date-list">
+                <a href="#" class="date-item">September 2025 <span>(3)</span></a>
+                <!-- <a href="#" class="date-item">June 2025 <span>(1)</span></a>
+                <a href="#" class="date-item">February 2025 <span>(1)</span></a>
+                <a href="#" class="date-item">January 2025 <span>(1)</span></a>
+                <a href="#" class="date-item">May 2024 <span>(1)</span></a>
+                <a href="#" class="date-item">December 2023 <span>(1)</span></a>
+                <a href="#" class="date-item">July 2022 <span>(1)</span></a>
+                <a href="#" class="date-item">April 2022 <span>(1)</span></a>
+                <a href="#" class="date-item">November 2021 <span>(1)</span></a>
+                <a href="#" class="date-item">December 2020 <span>(1)</span></a>
+                <a href="#" class="date-item">September 2020 <span>(1)</span></a>
+                <a href="#" class="date-item">June 2020 <span>(2)</span></a>
+                <a href="#" class="date-item">May 2020 <span>(1)</span></a>
+                <a href="#" class="date-item">March 2020 <span>(3)</span></a>
+                <a href="#" class="date-item">February 2020 <span>(1)</span></a>
+                <a href="#" class="date-item">January 2020 <span>(1)</span></a>
+                <a href="#" class="date-item">January 2019 <span>(1)</span></a>
+                <a href="#" class="date-item">June 2018 <span>(1)</span></a> -->
+            </div>
+        </aside>
+
+        <main class="main-content" id="mainContent">
+            <h1>Firoj Ansari</h1>
+
+            <div id="blogPostList">
+                <article>
+                    <h2><a href="#">Loading posts...</a></h2>
+                </article>
+            </div>
+
+            
+
+            <div class="pagination">
+                <span class="current">1</span>
+                <!-- <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">...</a>
+                <a href="#">Next</a>
+                <a href="#">Last</a> -->
+            </div>
+        </main>
+
+        <main class="archive-content" id="archiveContent" style="display: none;">
+            <h1>Firoj Ansari</h1>
+            
+            <div class="archive-header">
+                <h2 style="color: #999; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px;">POST ARCHIVE</h2>
+                <a href="#blog" onclick="showBlog(); return false;" style="color: #0f766e; text-decoration: none; font-size: 14px;">« Back to blog</a>
+            </div>
+
+            <div class="search-box" style="margin: 30px 0;">
+                <input type="text" placeholder="Search this site...">
+            </div>
+
+            <div class="archive-list" id="archiveList">
+                <article class="archive-item">
+                    <h2><a href="#">Loading archive...</a></h2>
+                </article>
+
+            </div>
+        </main>
+
+        <main class="dashboard-content" id="dashboardContent" style="display: none;">
+            <div class="dashboard-toolbar">
+                <h1>Blog Dashboard</h1>
+            </div>
+            <p class="dashboard-note">Local drafting only. To publish, export markdown and commit it to GitHub.</p>
+
+            <section class="dashboard-form">
+                <input type="text" id="postTitle" placeholder="Post title">
+                <input type="date" id="postDate">
+                <textarea id="postExcerpt" placeholder="Short summary (optional)"></textarea>
+                <textarea id="postBody" placeholder="Write your blog content here..."></textarea>
+                <div class="dashboard-actions">
+                    <button class="btn-draft" onclick="saveDraft()">Save Draft</button>
+                    <button class="btn-publish" onclick="exportDraftMarkdown()">Export for GitHub</button>
+                    <button class="btn-reset" onclick="copyExportSnippet()">Copy Snippet</button>
+                    <button class="btn-reset" onclick="resetEditor()">Clear</button>
+                </div>
+                <div class="dashboard-message" id="dashboardMessage"></div>
+                <pre class="export-snippet" id="exportSnippet">JSON snippet for posts/posts.json will appear here after export.</pre>
+            </section>
+
+            <section class="dashboard-list">
+                <h3>Drafts</h3>
+                <ul id="draftList"></ul>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        var BLOG_STORAGE_KEY = 'firoj_blog_drafts_v1';
+        var POSTS_MANIFEST_PATH = 'posts/posts.json';
+        var editingPostId = null;
+        var publishedPosts = [];
+
+        function isLocalEnvironment() {
+            return window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1' ||
+                window.location.hostname === '::1';
+        }
+
+        function toggleDashboardLink() {
+            var dashboardLink = document.getElementById('dashboardLink');
+            dashboardLink.style.display = isLocalEnvironment() ? 'inline-block' : 'none';
+        }
+
+        function ensureLocalDashboardAccess() {
+            if (isLocalEnvironment()) {
+                return true;
+            }
+            alert('Dashboard is available only on localhost.');
+            showBlog();
+            return false;
+        }
+
+        function escapeHtml(text) {
+            if (!text) {
+                return '';
+            }
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function readPosts() {
+            try {
+                var stored = localStorage.getItem(BLOG_STORAGE_KEY);
+                return stored ? JSON.parse(stored) : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function writePosts(posts) {
+            localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts));
+        }
+
+        function formatReadableDate(dateValue) {
+            if (!dateValue) {
+                return '';
+            }
+            var date = new Date(dateValue + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        }
+
+        function formatArchiveDate(dateValue) {
+            return formatReadableDate(dateValue).toUpperCase();
+        }
+
+        function extractMarkdownBody(markdownText, title) {
+            if (!markdownText) {
+                return [];
+            }
+            var lines = markdownText.split('\n');
+            var filtered = lines.filter(function (line) {
+                var trimmed = line.trim();
+                if (!trimmed) {
+                    return false;
+                }
+                if (title && trimmed === '# ' + title) {
+                    return false;
+                }
+                if (/^date:/i.test(trimmed)) {
+                    return false;
+                }
+                return true;
+            });
+            return filtered;
+        }
+
+        function createSlug(title) {
+            return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
+
+        function extractFormData() {
+            var title = document.getElementById('postTitle').value.trim();
+            var postDate = document.getElementById('postDate').value;
+            var excerpt = document.getElementById('postExcerpt').value.trim();
+            var body = document.getElementById('postBody').value.trim();
+
+            if (!title || !body) {
+                setDashboardMessage('Title and post content are required.');
+                return null;
+            }
+
+            if (!postDate) {
+                var today = new Date();
+                var month = String(today.getMonth() + 1).padStart(2, '0');
+                var day = String(today.getDate()).padStart(2, '0');
+                postDate = today.getFullYear() + '-' + month + '-' + day;
+            }
+
+            return {
+                title: title,
+                date: postDate,
+                excerpt: excerpt,
+                body: body
+            };
+        }
+
+        function setDashboardMessage(message) {
+            document.getElementById('dashboardMessage').textContent = message;
+        }
+
+        function resetEditor() {
+            editingPostId = null;
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postDate').value = '';
+            document.getElementById('postExcerpt').value = '';
+            document.getElementById('postBody').value = '';
+            document.getElementById('exportSnippet').textContent = 'JSON snippet for posts/posts.json will appear here after export.';
+            setDashboardMessage('');
+        }
+
+        function saveDraft() {
+            if (!ensureLocalDashboardAccess()) {
+                return;
+            }
+            var formData = extractFormData();
+            if (!formData) {
+                return;
+            }
+
+            var posts = readPosts();
+            if (editingPostId) {
+                posts = posts.map(function (post) {
+                    if (post.id === editingPostId) {
+                        post.title = formData.title;
+                        post.date = formData.date;
+                        post.excerpt = formData.excerpt;
+                        post.body = formData.body;
+                        post.updatedAt = new Date().toISOString();
+                    }
+                    return post;
+                });
+            } else {
+                posts.unshift({
+                    id: 'post_' + Date.now(),
+                    title: formData.title,
+                    date: formData.date,
+                    excerpt: formData.excerpt,
+                    body: formData.body,
+                    createdAt: new Date().toISOString()
+                });
+            }
+
+            writePosts(posts);
+            renderDashboardLists();
+            resetEditor();
+            setDashboardMessage('Draft saved.');
+        }
+
+        function exportDraftMarkdown() {
+            if (!ensureLocalDashboardAccess()) {
+                return;
+            }
+            var formData = extractFormData();
+            if (!formData) {
+                return;
+            }
+            var safeSlug = createSlug(formData.title);
+            var fileName = formData.date + '-' + (safeSlug || 'post') + '.md';
+            var markdown = '# ' + formData.title + '\n\n' +
+                'Date: ' + formatReadableDate(formData.date) + '\n\n' +
+                (formData.excerpt ? formData.excerpt + '\n\n' : '') +
+                formData.body + '\n';
+            var snippet = '{\n' +
+                '  "slug": "' + (safeSlug || 'post') + '",\n' +
+                '  "title": "' + formData.title.replace(/"/g, '\\"') + '",\n' +
+                '  "date": "' + formData.date + '",\n' +
+                '  "excerpt": "' + formData.excerpt.replace(/"/g, '\\"') + '",\n' +
+                '  "file": "posts/' + fileName + '"\n' +
+                '}';
+
+            var blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' });
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            document.getElementById('exportSnippet').textContent = snippet;
+            setDashboardMessage('Markdown exported. Add file under posts/, paste snippet in posts/posts.json, then commit and push.');
+        }
+
+        function copyExportSnippet() {
+            var snippet = document.getElementById('exportSnippet').textContent.trim();
+            if (!snippet || snippet.indexOf('JSON snippet') === 0) {
+                setDashboardMessage('Export a draft first to generate snippet.');
+                return;
+            }
+            navigator.clipboard.writeText(snippet).then(function () {
+                setDashboardMessage('Snippet copied. Paste it into posts/posts.json.');
+            }).catch(function () {
+                setDashboardMessage('Copy failed. Manually copy from the snippet box.');
+            });
+        }
+
+        function loadIntoEditor(postId) {
+            if (!ensureLocalDashboardAccess()) {
+                return;
+            }
+            var post = readPosts().find(function (item) { return item.id === postId; });
+            if (!post) {
+                return;
+            }
+            editingPostId = postId;
+            document.getElementById('postTitle').value = post.title;
+            document.getElementById('postDate').value = post.date;
+            document.getElementById('postExcerpt').value = post.excerpt || '';
+            document.getElementById('postBody').value = post.body;
+            setDashboardMessage('Loaded "' + post.title + '" in editor.');
+        }
+
+        function deletePost(postId) {
+            if (!ensureLocalDashboardAccess()) {
+                return;
+            }
+            var posts = readPosts().filter(function (item) { return item.id !== postId; });
+            writePosts(posts);
+            if (editingPostId === postId) {
+                resetEditor();
+            }
+            renderDashboardLists();
+            setDashboardMessage('Post removed.');
+        }
+
+        function renderDashboardLists() {
+            var posts = readPosts();
+            var draftList = document.getElementById('draftList');
+
+            if (posts.length === 0) {
+                draftList.innerHTML = '<li class="empty-state">No drafts yet.</li>';
+            } else {
+                draftList.innerHTML = posts.map(function (post) {
+                    return '<li>' +
+                        '<div><strong>' + escapeHtml(post.title) + '</strong><div class="dashboard-post-meta">' + escapeHtml(formatReadableDate(post.date)) + '</div></div>' +
+                        '<div class="dashboard-post-actions">' +
+                        '<button onclick="loadIntoEditor(\'' + post.id + '\')">Edit</button>' +
+                        '<button onclick="exportDraftById(\'' + post.id + '\')">Export</button>' +
+                        '<button onclick="deletePost(\'' + post.id + '\')">Delete</button>' +
+                        '</div>' +
+                        '</li>';
+                }).join('');
+            }
+        }
+
+        function exportDraftById(postId) {
+            var post = readPosts().find(function (item) { return item.id === postId; });
+            if (!post) {
+                return;
+            }
+            editingPostId = post.id;
+            document.getElementById('postTitle').value = post.title;
+            document.getElementById('postDate').value = post.date;
+            document.getElementById('postExcerpt').value = post.excerpt || '';
+            document.getElementById('postBody').value = post.body;
+            exportDraftMarkdown();
+        }
+
+        async function loadPublishedPosts() {
+            try {
+                var manifestResponse = await fetch(POSTS_MANIFEST_PATH, { cache: 'no-store' });
+                if (!manifestResponse.ok) {
+                    publishedPosts = [];
+                    renderPublishedPosts();
+                    return;
+                }
+                var manifest = await manifestResponse.json();
+                var posts = await Promise.all((manifest.posts || []).map(async function (post) {
+                    var markdownBody = '';
+                    try {
+                        var mdResponse = await fetch(post.file, { cache: 'no-store' });
+                        if (mdResponse.ok) {
+                            markdownBody = await mdResponse.text();
+                        }
+                    } catch (error) {
+                        markdownBody = '';
+                    }
+                    return {
+                        slug: post.slug,
+                        title: post.title,
+                        date: post.date,
+                        excerpt: post.excerpt || '',
+                        markdown: markdownBody
+                    };
+                }));
+                posts.sort(function (a, b) {
+                    return new Date(b.date) - new Date(a.date);
+                });
+                publishedPosts = posts;
+            } catch (error) {
+                publishedPosts = [];
+            }
+            renderPublishedPosts();
+        }
+
+        function renderPublishedPosts() {
+            var blogPostList = document.getElementById('blogPostList');
+            var archiveList = document.getElementById('archiveList');
+
+            if (!publishedPosts.length) {
+                blogPostList.innerHTML = '<article><h2><a href="#">No posts published yet</a></h2><p>Add markdown files and update posts/posts.json to publish your first blog.</p></article>';
+                archiveList.innerHTML = '<article class="archive-item"><h2><a href="#">No posts in archive yet</a></h2></article>';
+                return;
+            }
+
+            blogPostList.innerHTML = publishedPosts.map(function (post) {
+                var lines = extractMarkdownBody(post.markdown, post.title);
+                var bodyHtml = lines.slice(0, 4).map(function (line) {
+                    return '<p>' + escapeHtml(line) + '</p>';
+                }).join('');
+                var excerptHtml = post.excerpt ? '<p>' + escapeHtml(post.excerpt) + '</p>' : '';
+                return '<article>' +
+                    '<h2><a href="#">' + escapeHtml(post.title) + '</a></h2>' +
+                    excerptHtml +
+                    bodyHtml +
+                    '<div class="post-meta">Posted on ' + escapeHtml(formatReadableDate(post.date)) + '</div>' +
+                    '</article>';
+            }).join('');
+
+            archiveList.innerHTML = publishedPosts.map(function (post) {
+                return '<article class="archive-item">' +
+                    '<h2><a href="#">' + escapeHtml(post.title) + '</a></h2>' +
+                    '<div class="post-meta">' + escapeHtml(formatArchiveDate(post.date)) + '</div>' +
+                    '</article>';
+            }).join('');
+        }
+
+        function showArchive() {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('archiveContent').style.display = 'block';
+            document.getElementById('dashboardContent').style.display = 'none';
+            document.querySelector('.sidebar').style.display = 'none';
+            document.getElementById('archiveSidebar').style.display = 'block';
+            if (window.location.hash !== '#archive') {
+                window.location.hash = 'archive';
+            }
+        }
+
+        function showBlog() {
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('archiveContent').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'none';
+            document.querySelector('.sidebar').style.display = 'block';
+            document.getElementById('archiveSidebar').style.display = 'none';
+            if (window.location.hash !== '#blog') {
+                window.location.hash = 'blog';
+            }
+        }
+
+        function showDashboard() {
+            if (!ensureLocalDashboardAccess()) {
+                return;
+            }
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('archiveContent').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+            document.querySelector('.sidebar').style.display = 'block';
+            document.getElementById('archiveSidebar').style.display = 'none';
+            if (window.location.hash !== '#dashboard') {
+                window.location.hash = 'dashboard';
+            }
+        }
+
+        toggleDashboardLink();
+        renderDashboardLists();
+        loadPublishedPosts();
+
+        if (window.location.hash === '#archive') {
+            showArchive();
+        } else if (window.location.hash === '#dashboard') {
+            if (isLocalEnvironment()) {
+                showDashboard();
+            } else {
+                showBlog();
+            }
+        } else {
+            showBlog();
+        }
+
+        window.addEventListener('hashchange', function () {
+            if (window.location.hash === '#archive') {
+                showArchive();
+            } else if (window.location.hash === '#dashboard') {
+                if (isLocalEnvironment()) {
+                    showDashboard();
+                } else {
+                    showBlog();
+                }
+            } else {
+                showBlog();
+            }
+        });
+    </script>
+</body>
+</html>
