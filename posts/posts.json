@@ -9,3 +9,11 @@
     }
   ]
 }
+
+{
+  "slug": "the-ai",
+  "title": "The AI",
+  "date": "2026-04-30",
+  "excerpt": "The  AI impact on the world by 2030",
+  "file": "posts/2026-04-30-the-ai.md"
+}
