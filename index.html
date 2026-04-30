@@ -16,6 +16,7 @@
             line-height: 1.6;
             color: #333;
             background: #fff;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         .container {
@@ -34,10 +35,18 @@
             align-self: flex-start;
         }
 
+        .sidebar-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
         .sidebar h2 {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 0;
         }
 
         .social-links {
@@ -113,6 +122,43 @@
         .archive-link:hover {
             color: #000;
             text-decoration: underline;
+        }
+
+        .theme-switch {
+            width: 88px;
+            height: 32px;
+            border: 1px solid #d1d5db;
+            border-radius: 999px;
+            background: #f8fafc;
+            padding: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-switch-handle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-switch-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: #111827;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-right: 5px;
         }
 
         .rss-link {
@@ -332,6 +378,115 @@
             color: #777;
         }
 
+        body.dark-mode {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .sidebar h2,
+        body.dark-mode .main-content h1,
+        body.dark-mode .archive-content h1,
+        body.dark-mode .dashboard-content h1 {
+            color: #f8fafc;
+        }
+
+        body.dark-mode .search-box input,
+        body.dark-mode .dashboard-form input,
+        body.dark-mode .dashboard-form textarea {
+            background: #111827;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .search-box input::placeholder,
+        body.dark-mode .dashboard-form input::placeholder,
+        body.dark-mode .dashboard-form textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .archive-link,
+        body.dark-mode .archive-link:hover {
+            color: #f8fafc;
+        }
+
+        body.dark-mode article {
+            border-bottom-color: #1f2937;
+        }
+
+        body.dark-mode article p,
+        body.dark-mode .post-meta,
+        body.dark-mode .dashboard-note,
+        body.dark-mode .scalepbg-caption {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode article h2 a,
+        body.dark-mode .archive-item h2 a,
+        body.dark-mode .date-item,
+        body.dark-mode .sidebar-archive h2 a {
+            color: #2dd4bf;
+        }
+
+        body.dark-mode .archive-item {
+            border-bottom-color: #1f2937;
+        }
+
+        body.dark-mode .sidebar-archive h3,
+        body.dark-mode .date-item span,
+        body.dark-mode .archive-item .post-meta {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .pagination a,
+        body.dark-mode .pagination span {
+            border-color: #334155;
+            color: #e2e8f0;
+            background: #111827;
+        }
+
+        body.dark-mode .pagination .current {
+            background: #0f766e;
+            border-color: #0f766e;
+            color: #fff;
+        }
+
+        body.dark-mode .dashboard-form,
+        body.dark-mode .dashboard-list li,
+        body.dark-mode .export-snippet {
+            background: #111827;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .dashboard-post-meta,
+        body.dark-mode .empty-state {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .dashboard-post-actions button,
+        body.dark-mode .btn-reset {
+            background: #1f2937;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .theme-switch {
+            background: #0b1220;
+            border-color: #334155;
+            flex-direction: row-reverse;
+        }
+
+        body.dark-mode .theme-switch-handle {
+            background: #111827;
+            border-color: #334155;
+        }
+
+        body.dark-mode .theme-switch-label {
+            color: #f8fafc;
+            margin-right: 0;
+            margin-left: 5px;
+        }
+
         .archive-header {
             margin-bottom: 30px;
         }
@@ -532,7 +687,13 @@
 <body>
     <div class="container">
         <aside class="sidebar">
-            <h2>Firoj Ansari</h2>
+            <div class="sidebar-title-row">
+                <h2>Firoj Ansari</h2>
+                <button class="theme-switch" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                    <span class="theme-switch-handle">☀</span>
+                    <span class="theme-switch-label">Day</span>
+                </button>
+            </div>
             
             <div class="social-links">
                 <!-- <a href="mailto:your@email.com">Subscribe by Email</a> -->
@@ -645,8 +806,41 @@
     <script>
         var BLOG_STORAGE_KEY = 'firoj_blog_drafts_v1';
         var POSTS_MANIFEST_PATH = 'posts/posts.json';
+        var THEME_STORAGE_KEY = 'firoj_blog_theme_v1';
         var editingPostId = null;
         var publishedPosts = [];
+
+        function applySavedTheme() {
+            var savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            updateThemeToggleText();
+        }
+
+        function updateThemeToggleText() {
+            var isDark = document.body.classList.contains('dark-mode');
+            var toggleMain = document.getElementById('themeToggle');
+            if (toggleMain) {
+                var handle = toggleMain.querySelector('.theme-switch-handle');
+                var label = toggleMain.querySelector('.theme-switch-label');
+                toggleMain.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+                if (handle) {
+                    handle.textContent = isDark ? '☾' : '☀';
+                }
+                if (label) {
+                    label.textContent = isDark ? 'Night' : 'Day';
+                }
+            }
+        }
+
+        function toggleTheme() {
+            var isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem(THEME_STORAGE_KEY, isDark ? 'dark' : 'light');
+            updateThemeToggleText();
+        }
 
         function isLocalEnvironment() {
             return window.location.hostname === 'localhost' ||
@@ -1030,6 +1224,7 @@
             }
         }
 
+        applySavedTheme();
         renderDashboardLists();
         loadPublishedPosts();
 
