@@ -395,8 +395,8 @@
 
         article p {
             font-size: 16px;
-            line-height: 1.7;
-            margin-bottom: 15px;
+            line-height: 1.45;
+            margin-bottom: 10px;
             color: #444;
         }
 
@@ -710,6 +710,13 @@
             return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         }
 
+        function normalizeTextForCompare(text) {
+            return (text || '')
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
         function extractFormData() {
             var title = document.getElementById('postTitle').value.trim();
             var postDate = document.getElementById('postDate').value;
@@ -947,6 +954,11 @@
 
             blogPostList.innerHTML = publishedPosts.map(function (post) {
                 var lines = extractMarkdownBody(post.markdown, post.title);
+                var excerptText = normalizeTextForCompare(post.excerpt);
+                var firstLine = lines.length ? normalizeTextForCompare(lines[0]) : '';
+                if (excerptText && firstLine === excerptText) {
+                    lines.shift();
+                }
                 var bodyHtml = lines.slice(0, 4).map(function (line) {
                     return '<p>' + escapeHtml(line) + '</p>';
                 }).join('');
