@@ -99,18 +99,6 @@
             text-decoration: underline;
         }
 
-        .dashboard-link {
-            display: inline-block;
-            margin-top: 10px;
-            color: #000;
-            text-decoration: underline;
-            font-size: 14px;
-        }
-
-        .dashboard-link:hover {
-            color: #000;
-        }
-
         .rss-link {
             display: inline-block;
             margin-top: 15px;
@@ -540,7 +528,6 @@
             </div>
 
             <a href="#archive" class="archive-link" onclick="showArchive(); return false;">Visit all Blogs</a>
-            <a href="#dashboard" id="dashboardLink" class="dashboard-link" style="display: none;" onclick="showDashboard(); return false;">Local Draft Dashboard</a>
             
         </aside>
 
@@ -652,11 +639,6 @@
             return window.location.hostname === 'localhost' ||
                 window.location.hostname === '127.0.0.1' ||
                 window.location.hostname === '::1';
-        }
-
-        function toggleDashboardLink() {
-            var dashboardLink = document.getElementById('dashboardLink');
-            dashboardLink.style.display = isLocalEnvironment() ? 'inline-block' : 'none';
         }
 
         function ensureLocalDashboardAccess() {
@@ -1023,7 +1005,6 @@
             }
         }
 
-        toggleDashboardLink();
         renderDashboardLists();
         loadPublishedPosts();
 
