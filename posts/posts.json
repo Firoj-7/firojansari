@@ -1,19 +1,11 @@
 {
   "posts": [
     {
-      "slug": "the-most-valuable-thing-in-the-future",
-      "title": "The Most Valuable Thing in the Future",
-      "date": "2025-09-30",
-      "excerpt": "A new approach to building products powered by better tools and a faster idea-to-result cycle.",
-      "file": "posts/2025-09-30-the-most-valuable-thing-in-the-future.md"
+      "slug": "the-ai",
+      "title": "The AI",
+      "date": "2026-04-30",
+      "excerpt": "The AI impact on the world by 2030",
+      "file": "posts/2026-04-30-the-ai.md"
     }
   ]
-}
-
-{
-  "slug": "the-ai",
-  "title": "The AI",
-  "date": "2026-04-30",
-  "excerpt": "The  AI impact on the world by 2030",
-  "file": "posts/2026-04-30-the-ai.md"
 }
