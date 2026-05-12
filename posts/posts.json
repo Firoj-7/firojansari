@@ -1,20 +1,6 @@
 {
   "posts": [
     {
-      "slug": "the-ai",
-      "title": "The AI",
-      "date": "2026-04-30",
-      "excerpt": "The AI impact on the world by 2030",
-      "file": "posts/2026-04-30-the-ai.md"
-    },
-    {
-      "slug": "the-ai",
-      "title": "The AI",
-      "date": "2026-04-30",
-      "excerpt": "The  AI impact on the world by 2030",
-      "file": "posts/2026-04-30-the-ai.md1"
-    },
-    {
       "slug": "how-ai-can-change-education",
       "title": "How AI can change Education",
       "date": "2026-05-12",
