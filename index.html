@@ -427,6 +427,10 @@
             color: #2dd4bf;
         }
 
+        body.dark-mode .post-read-more {
+            color: #2dd4bf;
+        }
+
         body.dark-mode .archive-item {
             border-bottom-color: #1f2937;
         }
@@ -571,10 +575,56 @@
             color: #444;
         }
 
+        .post-preview {
+            font-size: 15px;
+            line-height: 1.45;
+            color: #4b5563;
+        }
+
+        .post-preview-ellipsis {
+            color: #888;
+            letter-spacing: 1px;
+        }
+
+        body.dark-mode .post-preview {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .post-preview-ellipsis {
+            color: #cbd5e1;
+        }
+
         .post-meta {
             font-size: 13px;
             color: #999;
             margin-top: 15px;
+        }
+
+        .post-read-more {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f766e;
+            text-decoration: none;
+        }
+
+        .post-read-more:hover {
+            text-decoration: underline;
+        }
+
+        .post-back-row {
+            margin-bottom: 20px;
+        }
+
+        .single-post-heading {
+            font-size: 24px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        body.dark-mode .single-post-heading {
+            color: #f8fafc;
         }
 
         .post-image {
@@ -706,12 +756,12 @@
                 <input type="text" placeholder="Search this site...">
             </div>
 
-            <a href="#archive" class="archive-link" onclick="showArchive(); return false;">Visit all Blogs</a>
+            <a href="#archive" class="archive-link">Visit all Blogs</a>
             
         </aside>
 
         <aside class="sidebar-archive" id="archiveSidebar" style="display: none;">
-            <h2><a href="#blog" onclick="showBlog(); return false;" style="color: #0f766e; text-decoration: none;">« Back to blog</a></h2>
+            <h2><a href="#blog" style="color: #0f766e; text-decoration: none;">« Back to blog</a></h2>
             
             <h3 style="font-size: 14px; font-weight: 600; margin: 20px 0 10px 0; color: #999; text-transform: uppercase;">Browse By Date</h3>
             
@@ -756,6 +806,11 @@
                 <a href="#">Next</a>
                 <a href="#">Last</a> -->
             </div>
+        </main>
+
+        <main class="main-content" id="singlePostWrap" style="display: none;">
+            <p class="post-back-row"><a href="#blog" class="archive-link">« All posts</a></p>
+            <div id="singlePostInner"></div>
         </main>
 
         <main class="archive-content" id="archiveContent" style="display: none;">
@@ -853,7 +908,7 @@
                 return true;
             }
             alert('Dashboard is available only on localhost.');
-            showBlog();
+            window.location.hash = 'blog';
             return false;
         }
 
@@ -894,29 +949,32 @@
             return formatReadableDate(dateValue).toUpperCase();
         }
 
-        function extractMarkdownBody(markdownText, title) {
+        function getBodyMarkdownForRender(markdownText, title) {
             if (!markdownText) {
-                return [];
+                return '';
             }
-            var lines = markdownText.split('\n');
-            var filtered = lines.filter(function (line) {
-                var trimmed = line.trim();
-                if (!trimmed) {
-                    return false;
+            var lines = markdownText.replace(/\r\n/g, '\n').split('\n');
+            var i = 0;
+            while (i < lines.length) {
+                var t = lines[i].trim();
+                if (!t) {
+                    i++;
+                    continue;
                 }
-                if (title && trimmed === '# ' + title) {
-                    return false;
+                if (title && t === '# ' + title) {
+                    i++;
+                    continue;
                 }
-                if (/^date:/i.test(trimmed)) {
-                    return false;
+                if (/^date:/i.test(t)) {
+                    i++;
+                    continue;
                 }
-                return true;
-            });
-            return filtered;
-        }
-
-        function createSlug(title) {
-            return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                break;
+            }
+            while (i < lines.length && !lines[i].trim()) {
+                i++;
+            }
+            return lines.slice(i).join('\n');
         }
 
         function normalizeTextForCompare(text) {
@@ -924,6 +982,97 @@
                 .toLowerCase()
                 .replace(/\s+/g, ' ')
                 .trim();
+        }
+
+        function markdownRemainderToArticleHtml(bodyMarkdown, excerpt) {
+            var blocks = getBodyBlocks(bodyMarkdown, excerpt);
+            return markdownBlocksToArticleHtml(blocks);
+        }
+
+        function getBodyBlocks(bodyMarkdown, excerpt) {
+            var text = (bodyMarkdown || '').replace(/\r\n/g, '\n').trim();
+            if (!text) {
+                return [];
+            }
+            var blocks = text.split(/\n\s*\n+/).map(function (b) {
+                return b.trim();
+            }).filter(Boolean);
+
+            var excerptNorm = normalizeTextForCompare(excerpt);
+            if (blocks.length && excerptNorm) {
+                var firstBlock = blocks[0];
+                var firstLines = firstBlock.split('\n').map(function (l) {
+                    return l.trim();
+                }).filter(Boolean);
+                if (firstLines.length === 1 && normalizeTextForCompare(firstLines[0]) === excerptNorm) {
+                    blocks.shift();
+                } else if (normalizeTextForCompare(firstBlock) === excerptNorm) {
+                    blocks.shift();
+                }
+            }
+            return blocks;
+        }
+
+        function markdownBlocksToArticleHtml(blocks) {
+            if (!blocks || !blocks.length) {
+                return '';
+            }
+            return blocks.map(function (block) {
+                var inner = block.split('\n').map(function (line) {
+                    return escapeHtml(line.trim());
+                }).filter(Boolean).join('<br>');
+                return '<p>' + inner + '</p>';
+            }).join('');
+        }
+
+        function buildListingPreviewBlocksHtml(markdownText, title, excerpt) {
+            var remainder = getBodyMarkdownForRender(markdownText, title);
+            var blocks = getBodyBlocks(remainder, excerpt);
+            if (!blocks.length) {
+                return '';
+            }
+            var firstBlock = blocks[0];
+            var linesAll = firstBlock.split('\n').map(function (l) {
+                return l.trim();
+            }).filter(Boolean);
+
+            var maxLinesPreview = 4;
+            var maxCharsPreview = 300;
+            var snippetLines = [];
+            var totalChars = 0;
+            var i = 0;
+
+            var truncated = false;
+            while (i < linesAll.length && snippetLines.length < maxLinesPreview && totalChars < maxCharsPreview) {
+                var line = linesAll[i];
+                if (totalChars + line.length + 2 > maxCharsPreview) {
+                    var room = maxCharsPreview - totalChars - 2;
+                    if (room > 18) {
+                        snippetLines.push(line.slice(0, room));
+                    }
+                    truncated = true;
+                    break;
+                }
+                snippetLines.push(line);
+                totalChars += line.length + 2;
+                i++;
+            }
+
+            if (!truncated) {
+                truncated = i < linesAll.length || blocks.length > 1;
+            }
+
+            var inner = snippetLines.map(function (line) {
+                return escapeHtml(line);
+            }).join('<br>');
+            if (truncated) {
+                inner += '<br><span class="post-preview-ellipsis">\u2026</span>';
+            }
+            return '<p class="post-preview">' + inner + '</p>';
+        }
+
+        function createSlug(title) {
+            return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         }
 
         function extractFormData() {
@@ -1120,6 +1269,7 @@
                 if (!manifestResponse.ok) {
                     publishedPosts = [];
                     renderPublishedPosts();
+                    routeApp();
                     return;
                 }
                 var manifest = await manifestResponse.json();
@@ -1149,6 +1299,7 @@
                 publishedPosts = [];
             }
             renderPublishedPosts();
+            routeApp();
         }
 
         function renderPublishedPosts() {
@@ -1162,97 +1313,118 @@
             }
 
             blogPostList.innerHTML = publishedPosts.map(function (post) {
-                var lines = extractMarkdownBody(post.markdown, post.title);
-                var excerptText = normalizeTextForCompare(post.excerpt);
-                var firstLine = lines.length ? normalizeTextForCompare(lines[0]) : '';
-                if (excerptText && firstLine === excerptText) {
-                    lines.shift();
-                }
-                var bodyHtml = lines.slice(0, 4).map(function (line) {
-                    return '<p>' + escapeHtml(line) + '</p>';
-                }).join('');
+                var hash = '#post-' + encodeURIComponent(post.slug);
+                var previewHtml = buildListingPreviewBlocksHtml(post.markdown, post.title, post.excerpt);
                 var excerptHtml = post.excerpt ? '<p>' + escapeHtml(post.excerpt) + '</p>' : '';
                 return '<article>' +
-                    '<h2><a href="#">' + escapeHtml(post.title) + '</a></h2>' +
+                    '<h2><a href="' + hash + '">' + escapeHtml(post.title) + '</a></h2>' +
                     excerptHtml +
-                    bodyHtml +
+                    previewHtml +
+                    '<a href="' + hash + '" class="post-read-more">Full blog</a>' +
                     '<div class="post-meta">Posted on ' + escapeHtml(formatReadableDate(post.date)) + '</div>' +
                     '</article>';
             }).join('');
 
             archiveList.innerHTML = publishedPosts.map(function (post) {
+                var hash = '#post-' + encodeURIComponent(post.slug);
                 return '<article class="archive-item">' +
-                    '<h2><a href="#">' + escapeHtml(post.title) + '</a></h2>' +
+                    '<h2><a href="' + hash + '">' + escapeHtml(post.title) + '</a></h2>' +
                     '<div class="post-meta">' + escapeHtml(formatArchiveDate(post.date)) + '</div>' +
                     '</article>';
             }).join('');
         }
 
-        function showArchive() {
+        function hideAllViews() {
             document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('archiveContent').style.display = 'block';
-            document.getElementById('dashboardContent').style.display = 'none';
-            document.querySelector('.sidebar').style.display = 'none';
-            document.getElementById('archiveSidebar').style.display = 'block';
-            if (window.location.hash !== '#archive') {
-                window.location.hash = 'archive';
-            }
-        }
-
-        function showBlog() {
-            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('singlePostWrap').style.display = 'none';
             document.getElementById('archiveContent').style.display = 'none';
             document.getElementById('dashboardContent').style.display = 'none';
+        }
+
+        function routeApp() {
+            hideAllViews();
+            var frag = (window.location.hash || '').replace(/^#/, '').trim() || 'blog';
+
+            if (frag === 'blog') {
+                document.getElementById('mainContent').style.display = 'block';
+                document.querySelector('.sidebar').style.display = 'block';
+                document.getElementById('archiveSidebar').style.display = 'none';
+                return;
+            }
+
+            if (frag === 'archive') {
+                document.getElementById('archiveContent').style.display = 'block';
+                document.querySelector('.sidebar').style.display = 'none';
+                document.getElementById('archiveSidebar').style.display = 'block';
+                return;
+            }
+
+            if (frag === 'dashboard') {
+                if (isLocalEnvironment()) {
+                    document.getElementById('dashboardContent').style.display = 'block';
+                    document.querySelector('.sidebar').style.display = 'block';
+                    document.getElementById('archiveSidebar').style.display = 'none';
+                } else {
+                    window.location.hash = 'blog';
+                }
+                return;
+            }
+
+            if (frag.slice(0, 5) === 'post-' && frag.length > 5) {
+                if (!publishedPosts.length) {
+                    document.getElementById('mainContent').style.display = 'block';
+                    document.querySelector('.sidebar').style.display = 'block';
+                    document.getElementById('archiveSidebar').style.display = 'none';
+                    return;
+                }
+                document.getElementById('singlePostWrap').style.display = 'block';
+                document.querySelector('.sidebar').style.display = 'block';
+                document.getElementById('archiveSidebar').style.display = 'none';
+                try {
+                    renderSinglePostPage(decodeURIComponent(frag.slice(5)));
+                } catch (e) {
+                    renderSinglePostPage(frag.slice(5));
+                }
+                return;
+            }
+
+            document.getElementById('mainContent').style.display = 'block';
             document.querySelector('.sidebar').style.display = 'block';
             document.getElementById('archiveSidebar').style.display = 'none';
-            if (window.location.hash !== '#blog') {
-                window.location.hash = 'blog';
+        }
+
+        function renderSinglePostPage(slug) {
+            var post = publishedPosts.find(function (p) { return p.slug === slug; });
+            var inner = document.getElementById('singlePostInner');
+            if (!post) {
+                inner.innerHTML = '<article><p>Post not found.</p><p><a href="#blog" class="post-read-more">Back to all posts</a></p></article>';
+                return;
             }
+            var remainder = getBodyMarkdownForRender(post.markdown, post.title);
+            var bodyHtml = markdownRemainderToArticleHtml(remainder, post.excerpt);
+            var excerptHtml = post.excerpt ? '<p>' + escapeHtml(post.excerpt) + '</p>' : '';
+            inner.innerHTML =
+                '<article>' +
+                '<h2 class="single-post-heading">' + escapeHtml(post.title) + '</h2>' +
+                excerptHtml +
+                bodyHtml +
+                '<div class="post-meta">Posted on ' + escapeHtml(formatReadableDate(post.date)) + '</div>' +
+                '</article>';
         }
 
         function showDashboard() {
             if (!ensureLocalDashboardAccess()) {
                 return;
             }
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('archiveContent').style.display = 'none';
-            document.getElementById('dashboardContent').style.display = 'block';
-            document.querySelector('.sidebar').style.display = 'block';
-            document.getElementById('archiveSidebar').style.display = 'none';
-            if (window.location.hash !== '#dashboard') {
-                window.location.hash = 'dashboard';
-            }
+            window.location.hash = 'dashboard';
         }
 
         applySavedTheme();
         renderDashboardLists();
+        routeApp();
         loadPublishedPosts();
 
-        if (window.location.hash === '#archive') {
-            showArchive();
-        } else if (window.location.hash === '#dashboard') {
-            if (isLocalEnvironment()) {
-                showDashboard();
-            } else {
-                showBlog();
-            }
-        } else {
-            showBlog();
-        }
-
-        window.addEventListener('hashchange', function () {
-            if (window.location.hash === '#archive') {
-                showArchive();
-            } else if (window.location.hash === '#dashboard') {
-                if (isLocalEnvironment()) {
-                    showDashboard();
-                } else {
-                    showBlog();
-                }
-            } else {
-                showBlog();
-            }
-        });
+        window.addEventListener('hashchange', routeApp);
     </script>
 </body>
 </html>
